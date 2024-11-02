@@ -1,53 +1,44 @@
 import "./App.css";
-import React from "react";
-import CoinDisplay from "./js/CoinDisplay";
-import CollectButton from "./js/CollectButton";
-import AutoCollector from "./js/AutoCollector";
-import TierDisplay from "./js/TierDisplay";
-import TierManager from "./js/TierManager";
+import React, { useEffect } from "react";
 import usePersistentState from "./hooks/usePersistentState";
-import UpgradeList from "./js/UpgradeList";
-import ResetButton from "./js/ResetButton";
+import DustParticle from "./components/DustParticle";
+import { formatNumber } from "./utils/formatNumber";
+import UpgradeList from "./components/UpgradeList";
 
 const App = () => {
-  // 코인 상태 정의
-  const [coins, setCoins] = usePersistentState("coins", 0); // 코인 상태 관리
-  const [autoCoin, setAutoCoin] = usePersistentState("autoCoin", 1); // 자동 수익 상태 관리
-  const [tier, setTier] = usePersistentState("tier", 1); // 티어 상태
-  const [clickValue, setClickValue] = usePersistentState("clickValue", 1); // 클릭당 코인 수익
-  const [resetBonus, setResetBonus] = usePersistentState("resetBonus", 1);
+  const [dust, setDust] = usePersistentState("dust", 0);
+  const [clickValue, setClickValue] = usePersistentState("clickValue", 1); // 클릭당 먼지 획득량
+  const [autoDust, setAutoDust] = usePersistentState("autoDust", 0); // 자동 먼지 수집량
 
-  // 클릭하여 코인 증가 함수
-  const handleClick = () => {
-    setCoins((prevCoins) => prevCoins + clickValue * tier * resetBonus); // 클릭 시 코인 1 증가
+  const handleDustClick = () => {
+    setDust((prevDust) => prevDust + clickValue); // 클릭할 때마다 먼지 수집
   };
 
-  const handleReset = () => {
-    setCoins(0);
-    setAutoCoin(1);
-    setClickValue(1);
-    setTier(1);
-    setResetBonus((prevBonus) => prevBonus + 0.1);
-    localStorage.removeItem("upgrades"); //업그레이드 초기화
-  };
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setDust((prevDust) => prevDust + autoDust);
+    }, 1000);
+    return () => clearInterval(intervalId); // 언마운트 시 interval 제거
+  }, [autoDust, setDust]);
+
   return (
-    <div className="app">
-      <h1>Universe Evolution Incremental</h1>
-      <CoinDisplay coins={coins} />
-      <CollectButton onClick={handleClick} />
-      <AutoCollector coins={coins} setCoins={setCoins} autoCoin={autoCoin} />
-      <TierDisplay tier={tier} />
-      <TierManager coins={coins} tier={tier} setTier={setTier} />
+    <div id="app-background" className="app">
+      <div id="dust-container">
+        <DustParticle /> {/** 먼지 입자 컴포넌트 */}
+      </div>
+      <h1>Origins of the Universe</h1>
+      <h2>Collected Cosmic Dust: {formatNumber(dust)}</h2>
+      <button onClick={handleDustClick} className="collect-button">
+        Collect Cosmic Dust
+      </button>
       <UpgradeList
-        coins={coins}
-        setCoins={setCoins}
-        autoCoin={autoCoin}
-        setAutoCoin={setAutoCoin}
+        dust={dust}
+        setDust={setDust}
         clickValue={clickValue}
         setClickValue={setClickValue}
-        tier={tier} /* 티어에 따라 업그레이드 표시  */
+        autoDust={autoDust}
+        setAutoDust={setAutoDust}
       />
-      <ResetButton handleReset={handleReset} tier={tier} />
     </div>
   );
 };

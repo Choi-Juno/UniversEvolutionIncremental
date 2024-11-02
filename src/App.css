@@ -1,42 +1,61 @@
-/* App.css */
 .app {
   text-align: center;
   font-family: Arial, Helvetica, sans-serif;
-  padding: 20px;
-  background-color: #f5f5f5;
+  background-color: #0b0c10;
+  color: #66fcf1;
   min-height: 100vh;
+  padding: 20px;
 }
 
-h1 {
-  font-size: 2.5rem;
-  color: #333;
+/* 우주 먼지 애니메이션 */
+@keyframes dustFlicker {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
-.upgrade {
+.dust-particle {
+  position: absolute;
+  background-color: #c5c6c7;
+  border-radius: 50%;
+  width: 3px;
+  height: 3px;
+  animation: dustFlicker 3s infinite;
+  opacity: 0.8;
+}
+
+.collect-button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  background-color: #45a29e;
+  border: none;
+  border-radius: 5px;
+  color: #0b0c10;
+  cursor: pointer;
+  transition: background-color 0.3s;
   margin-top: 20px;
 }
 
-.upgrade h2 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
+.collect-button:hover {
+  background-color: #66fcf1;
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 1.2em;
-  color: #fff;
-  background-color: #4caf50;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+@keyframes clickEffect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
-button:hover {
-  background-color: #34a049;
-}
-
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.collect-button:active {
+  animation: clickEffect 0.1s;
 }
