@@ -5,34 +5,36 @@ import { formatNumber } from "../utils/formatNumber";
 const SmoothCounter = ({ targetValue }) => {
   const [displayValue, setDisplayValue] = useState(targetValue);
   const requestRef = useRef(null);
-  const startTimeRef = useRef(null);
 
   useEffect(() => {
-    const duration = 1000; // 1초 동안 애니메이션 실행
+    const duration = 1000; // 애니메이션의 전체 지속 시간 (1초)
+    const frameRate = 60; // 초당 60프레임 (약 16ms 간격으로 업데이트)
+    const totalFrames = duration / (1000 / frameRate); // 총 프레임 수 계산
+    const increment = (targetValue - displayValue) / totalFrames; // 프레임당 증가량
 
-    const updateDisplayValue = (timestamp) => {
-      if (!startTimeRef.current) startTimeRef.current = timestamp;
-      const elapsed = timestamp - startTimeRef.current;
+    const animate = () => {
+      setDisplayValue((prevValue) => {
+        const newValue = prevValue + increment;
 
-      if (elapsed < duration) {
-        // 목표값에 비례한 증가량 계산
-        const progress = elapsed / duration;
-        const newValue = displayValue + (targetValue - displayValue) * progress;
-        setDisplayValue(newValue);
-        requestRef.current = requestAnimationFrame(updateDisplayValue);
-      } else {
-        // 애니메이션이 종료되면 정확한 목표값으로 설정
-        setDisplayValue(targetValue);
-        cancelAnimationFrame(requestRef.current);
-        startTimeRef.current = null;
-      }
+        // 목표값에 도달했거나 넘으면 정확히 목표값으로 설정하고 애니메이션 종료
+        if (
+          (increment > 0 && newValue >= targetValue) ||
+          (increment < 0 && newValue <= targetValue)
+        ) {
+          cancelAnimationFrame(requestRef.current);
+          return targetValue;
+        }
+
+        return newValue;
+      });
+      requestRef.current = requestAnimationFrame(animate);
     };
 
-    requestRef.current = requestAnimationFrame(updateDisplayValue);
-    return () => cancelAnimationFrame(requestRef.current);
+    requestRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(requestRef.current); // 클린업
   }, [targetValue, displayValue]);
 
-  return <span>{formatNumber(Math.round(displayValue))}</span>;
+  return <span>{formatNumber(Math.round(displayValue))}</span>; // 화면에 정수로만 표시
 };
 
 export default SmoothCounter;

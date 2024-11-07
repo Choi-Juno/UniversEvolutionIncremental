@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 
-const ResourceRate = ({ rate, setResource }) => {
+const ResourceRate = ({ rate, setResource, resourceMultiplier }) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setResource((prevResource) => prevResource + rate);
+      setResource((prevResource) => resourceMultiplier * (prevResource + rate));
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [rate, setResource]);
+  }, [rate, setResource, resourceMultiplier]);
   return null;
 };
 

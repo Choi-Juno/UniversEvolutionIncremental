@@ -10,6 +10,8 @@ const UpgradeList = ({
   setClickValue,
   autoDust,
   setAutoDust,
+  setAutoDustMultiplier,
+  setDustMultiplier,
 }) => {
   // TODO : 업그레이드 상태 완성하기
   const [upgrades, setUpgrades] = usePersistentState("upgrades", [
@@ -17,7 +19,7 @@ const UpgradeList = ({
       id: 1,
       name: "Large hands", // 큰 손
       cost: 10,
-      costMultiplier: 1.1,
+      costMultiplier: 1.2,
       currentLevel: 0,
       unlockRequirement: { dust: 10 },
       isUnlocked: false, // 초기 상태는 해금되지 않음
@@ -41,15 +43,17 @@ const UpgradeList = ({
       currentLevel: 0,
       unlockRequirement: { upgradeId: 1, level: 10, dust: 500 },
       isUnlocked: false,
+      description: "Doubles dust acquisition per click",
     },
     {
       id: 4,
       name: "Double Auto Collection",
       cost: 1500,
-      maxLevel: 2,
       currentLevel: 0,
+      costMultiplier: 2.5,
       unlockRequirement: { upgradeId: 2, level: 5, dust: 500 },
       isUnlocked: false,
+      description: "Doubles automatic dust collection",
     },
   ]);
 
@@ -57,8 +61,8 @@ const UpgradeList = ({
   const upgradeEffects = {
     1: () => setClickValue((prev) => prev + 1),
     2: () => setAutoDust((prev) => prev + 1),
-    3: () => setClickValue((prev) => prev * 2),
-    4: () => setAutoDust((prev) => prev * 2),
+    3: () => setDustMultiplier((prev) => prev * 2),
+    4: () => setAutoDustMultiplier((prev) => prev * 2),
   };
 
   const handleUpgrade = (upgradeId) => {

@@ -10,10 +10,18 @@ import SmoothCounter from "./components/SmoothCounter";
 const App = () => {
   const [dust, setDust] = usePersistentState("dust", 0);
   const [clickValue, setClickValue] = usePersistentState("clickValue", 1); // 클릭당 먼지 획득량
+  const [clickMultiplier, setClickMultiplier] = usePersistentState(
+    "clickMultiplier",
+    1
+  );
   const [autoDustRate, setAutoDustRate] = usePersistentState("autoDust", 0); // 자동 먼지 수집량
+  const [autoDustMultiplier, setAutoDustMultiplier] = usePersistentState(
+    "autoDustMultiplier",
+    1
+  );
 
   const handleDustClick = () => {
-    setDust((prevDust) => prevDust + clickValue); // 클릭할 때마다 먼지 수집
+    setDust((prevDust) => clickMultiplier * (prevDust + clickValue)); // 클릭할 때마다 먼지 수집
   };
 
   return (
@@ -29,7 +37,11 @@ const App = () => {
       <button onClick={handleDustClick} className="collect-button">
         Collect Cosmic Dust
       </button>
-      <ResourceRate rate={autoDustRate} setResource={setDust} />
+      <ResourceRate
+        rate={autoDustRate}
+        setResource={setDust}
+        resourceMultiplier={autoDustMultiplier}
+      />
       <UpgradeList
         dust={dust}
         setDust={setDust}
@@ -37,6 +49,8 @@ const App = () => {
         setClickValue={setClickValue}
         autoDust={autoDustRate}
         setAutoDust={setAutoDustRate}
+        setDustMultiplier={setClickMultiplier}
+        setAutoDustMultiplier={setAutoDustMultiplier}
       />
     </div>
   );
