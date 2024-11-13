@@ -1,0 +1,48 @@
+.admin-panel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #2e2e3e;
+  color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  width: 250px;
+}
+
+.admin-panel h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.input-group label {
+  font-size: 0.9em;
+}
+
+.input-group input {
+  width: 100px;
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+}
+
+.update-button {
+  width: 100%;
+  padding: 5px;
+  border: none;
+  background-color: #3944bc;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.update-button:hover {
+  background-color: #4e5cf7;
+}

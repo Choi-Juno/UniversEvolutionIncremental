@@ -1,0 +1,26 @@
+.sidebar-menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 200px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.sidebar-menu button {
+  background: none;
+  color: #b0bec5;
+  text-align: left;
+  border: none;
+  padding: 15px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.sidebar-menu button:hover {
+  color: #ffffff;
+  background-color: #3944bc;
+}

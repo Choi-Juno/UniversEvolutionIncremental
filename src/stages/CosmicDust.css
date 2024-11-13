@@ -1,0 +1,31 @@
+.collect-button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  background-color: #3944bc;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+}
+
+.collect-button:hover {
+  background-color: #4e5cf7;
+}
+
+@keyframes clickEffect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.collect-button:active {
+  animation: clickEffect 0.1s;
+}

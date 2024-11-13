@@ -1,69 +1,51 @@
-import React from "react";
+import React, { useEffect } from "react";
 import usePersistentState from "../hooks/usePersistentState";
 import { formatNumber } from "../utils/formatNumber";
 import "../css/UpgradeList.css";
+import upgradesData from "./UpgradesData";
 
 const UpgradeList = ({
   dust,
   setDust,
-  clickValue,
   setClickValue,
-  autoDust,
   setAutoDust,
+  setClickValueMultiplier,
   setAutoDustMultiplier,
   setDustMultiplier,
+  setAutoEnergy,
+  setEnergyConversionRate,
 }) => {
   // TODO : 업그레이드 상태 완성하기
-  const [upgrades, setUpgrades] = usePersistentState("upgrades", [
-    {
-      id: 1,
-      name: "Large hands", // 큰 손
-      cost: 10,
-      costMultiplier: 1.2,
-      currentLevel: 0,
-      unlockRequirement: { dust: 10 },
-      isUnlocked: false, // 초기 상태는 해금되지 않음
-      description: "Increases dust gained per click", // 클링 당 먼지 수집을 증가시킵니다.
-    },
-    {
-      id: 2,
-      name: "Dust Collector", // 먼지 흡입기
-      cost: 50,
-      costMultiplier: 1.3,
-      currentLevel: 0,
-      unlockRequirement: { upgradeId: 1, level: 5, dust: 50 }, // 1번 업그레이드가 5레벨 이상일 때 해금
-      isUnlocked: false,
-      description: "Automatically collect dusts every second",
-    },
-    {
-      id: 3,
-      name: "Two-handed", // 양손 수집가
-      cost: 200,
-      costMultiplier: 2,
-      currentLevel: 0,
-      unlockRequirement: { upgradeId: 1, level: 10, dust: 500 },
-      isUnlocked: false,
-      description: "Doubles dust acquisition per click",
-    },
-    {
-      id: 4,
-      name: "Double Auto Collection",
-      cost: 1500,
-      currentLevel: 0,
-      costMultiplier: 2.5,
-      unlockRequirement: { upgradeId: 2, level: 5, dust: 500 },
-      isUnlocked: false,
-      description: "Doubles automatic dust collection",
-    },
-  ]);
+  const [upgrades, setUpgrades] = usePersistentState(
+    "upgrades",
+    upgradesData.map((upgrade) => ({
+      ...upgrade,
+      currentLevel: 0, // 기본 레벨 설정
+      cost: upgrade.baseCost, // 기본 비용 설정
+    }))
+  );
 
-  // 업그레이드 효과 정의
-  const upgradeEffects = {
-    1: () => setClickValue((prev) => prev + 1),
-    2: () => setAutoDust((prev) => prev + 1),
-    3: () => setDustMultiplier((prev) => prev * 2),
-    4: () => setAutoDustMultiplier((prev) => prev * 2),
-  };
+  // 컴포넌트 초기 로드 시 각 업그레이드 효과 적용
+  useEffect(() => {
+    upgrades.forEach((upgrade) => {
+      if (upgrade.currentLevel > 0) {
+        const upgradeDefinition = upgradesData.find((u) => u.id === upgrade.id);
+        if (upgradeDefinition ** upgradeDefinition.effect) {
+          upgradeDefinition.effect(
+            {
+              setClickValue,
+              setAutoDust,
+              setDustMultiplier,
+              setAutoDustMultiplier,
+              setEnergyConversionRate,
+              setAutoEnergy,
+            },
+            upgrade.currentLevel
+          );
+        }
+      }
+    });
+  }, [upgrades, setClickValue, setAutoDust, setEnergyConversionRate]);
 
   const handleUpgrade = (upgradeId) => {
     // 현재 업그레이드 항목을 찾음
@@ -74,20 +56,34 @@ const UpgradeList = ({
       // 비용 차감 및 상태 업데이트를 함수형으로 처리
       setDust((prevDust) => prevDust - upgrade.cost);
 
+      const newLevel = upgrade.currentLevel + 1;
+      const newCost = Math.floor(upgrade.cost * upgrade.costMultiplier);
+
       setUpgrades((prevUpgrades) =>
         prevUpgrades.map((u) =>
           u.id === upgradeId
             ? {
                 ...u,
-                cost: Math.floor(u.cost * u.costMultiplier), // 비용 증가
-                currentLevel: u.currentLevel + 1, // 레벨 증가
+                cost: newCost, // 비용 증가
+                currentLevel: newLevel, // 레벨 증가
               }
             : u
         )
       );
 
       // 업그레이드 효과 적용
-      upgradeEffects[upgradeId]?.();
+      const upgradeDefinition = upgradesData.find((u) => u.id === upgrade.id);
+      upgradeDefinition.effect(
+        {
+          setClickValue,
+          setAutoDust,
+          setDustMultiplier,
+          setAutoDustMultiplier,
+          setEnergyConversionRate,
+          setAutoEnergy,
+        },
+        newLevel
+      );
     } else {
       alert("Not enough dust for this upgrade!");
     }
