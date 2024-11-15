@@ -59,9 +59,12 @@ const CosmicDust = () => {
         Collected Cosmic Dust: <SmoothCounter targetValue={dust} /> (+
         {formatNumber(autoDustRate * autoDustMultiplier * energyBoost)} / s)
       </h2>
-      <h2>
-        Energy: <SmoothCounter targetValue={energy} />
-      </h2>
+      {energy >= 1 && (
+        <h2>
+          Energy: <SmoothCounter targetValue={energy} /> (+
+          {formatNumber((autoEnergy / autoEnergyCooldown) * 1000)} / s)
+        </h2>
+      )}
       <button onClick={handleDustClick} className="collect-button">
         Collect Cosmic Dust
       </button>
@@ -71,7 +74,7 @@ const CosmicDust = () => {
           disabled={dust < energyConversionRate}
           className="collect-button"
         >
-          Constvert Dust to Energy (Cots: {formatNumber(energyConversionRate)}{" "}
+          Constvert Dust to Energy (Cost: {formatNumber(energyConversionRate)}{" "}
           Dust)
         </button>
       )}
@@ -101,6 +104,7 @@ const CosmicDust = () => {
         setAutoEnergy={setAutoEnergy}
         energyConversionRate={energyConversionRate}
         setEnergyConversionRate={setEnergyConversionRate}
+        setAutoEnergyCooldown={setAutoEnergyCooldown}
       />
     </div>
   );

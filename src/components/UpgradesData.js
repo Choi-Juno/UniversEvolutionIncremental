@@ -67,9 +67,18 @@ const upgradesData = [
     description: "Automatically generate energy",
     effect: ({ setAutoEnergy }) => setAutoEnergy((prev) => prev + 1),
   },
-  // {
-  //   id: 7,
-  // },
+  {
+    id: 7,
+    name: "Auto Energy Cooldown",
+    baseCost: 10000000,
+    currentLevel: 0,
+    costMultiplier: 10,
+    unlockRequirement: { upgradeId: 6, level: 1 },
+    isUnlocked: false,
+    description: "Reduces Auto Energy cooldown by 10%",
+    effect: ({ setAutoEnergyCooldown }, level) =>
+      setAutoEnergyCooldown((prev) => prev * Math.pow(0.9, level)),
+  },
 ];
 
 export default upgradesData;

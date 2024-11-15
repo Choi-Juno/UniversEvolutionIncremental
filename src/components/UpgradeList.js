@@ -14,6 +14,7 @@ const UpgradeList = ({
   setDustMultiplier,
   setAutoEnergy,
   setEnergyConversionRate,
+  setAutoEnergyCooldown,
 }) => {
   // TODO : 업그레이드 상태 완성하기
   const [upgrades, setUpgrades] = usePersistentState(
@@ -39,6 +40,7 @@ const UpgradeList = ({
               setAutoDustMultiplier,
               setEnergyConversionRate,
               setAutoEnergy,
+              setAutoEnergyCooldown,
             },
             upgrade.currentLevel
           );
@@ -81,6 +83,7 @@ const UpgradeList = ({
           setAutoDustMultiplier,
           setEnergyConversionRate,
           setAutoEnergy,
+          setAutoEnergyCooldown,
         },
         newLevel
       );
