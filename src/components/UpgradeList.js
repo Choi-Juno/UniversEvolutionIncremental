@@ -47,7 +47,16 @@ const UpgradeList = ({
         }
       }
     });
-  }, [upgrades, setClickValue, setAutoDust, setEnergyConversionRate]);
+  }, [
+    upgrades,
+    setClickValue,
+    setAutoDust,
+    setEnergyConversionRate,
+    setAutoDustMultiplier,
+    setAutoEnergy,
+    setAutoEnergyCooldown,
+    setDustMultiplier,
+  ]);
 
   const handleUpgrade = (upgradeId) => {
     // 현재 업그레이드 항목을 찾음

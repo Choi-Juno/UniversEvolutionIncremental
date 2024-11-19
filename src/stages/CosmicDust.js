@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DustParticle from "../components/DustParticle";
 import SmoothCounter from "../components/SmoothCounter";
 import usePersistentState from "../hooks/usePersistentState";
@@ -7,7 +7,7 @@ import ResourceRate from "../components/ResourceRate";
 import UpgradeList from "../components/UpgradeList";
 import "./CosmicDust.css";
 
-const CosmicDust = () => {
+const CosmicDust = ({ stageProgress, setStageProgress, setCurrentStage }) => {
   const [dust, setDust] = usePersistentState("dust", 0);
   const [clickValue, setClickValue] = usePersistentState("clickValue", 1); // 클릭당 먼지 획득량
   const [clickMultiplier, setClickMultiplier] = usePersistentState(
@@ -18,10 +18,6 @@ const CosmicDust = () => {
   const [autoDustMultiplier, setAutoDustMultiplier] = usePersistentState(
     "autoDustMultiplier",
     1
-  );
-  const [autoDustCooldown, setAutoDustCooldown] = usePersistentState(
-    "autoDustCooldown",
-    1000
   );
   const [energy, setEnergy] = usePersistentState("energy", 0);
   const [autoEnergy, setAutoEnergy] = usePersistentState("autoEnergy", 0);
@@ -49,6 +45,18 @@ const CosmicDust = () => {
     }
   };
 
+  useEffect(() => {
+    if (dust >= 1e12 && energy >= 1e3) {
+      // 다음 스테이지 해금
+      setStageProgress((prev) => ({
+        ...prev,
+        unlockedStages: [
+          ...new Set([...prev.unlockedStages, "stellarFormation"]),
+        ],
+      }));
+    }
+  });
+
   return (
     <div>
       <div id="dust-container">
@@ -68,7 +76,7 @@ const CosmicDust = () => {
       <button onClick={handleDustClick} className="collect-button">
         Collect Cosmic Dust
       </button>
-      {dust >= 1000000 && (
+      {dust >= energyConversionRate && (
         <button
           onClick={handleEnergyConversion}
           disabled={dust < energyConversionRate}
@@ -80,17 +88,18 @@ const CosmicDust = () => {
       )}
       <ResourceRate
         rate={autoDustRate}
-        setResource={setDust}
-        resourceMultiplier={autoDustMultiplier}
-        coolDown={autoDustCooldown}
+        setResource={(newDust) => {
+          setDust(newDust);
+        }}
+        multiplier={autoDustMultiplier}
         boost={energyBoost}
       />
       <ResourceRate
         rate={autoEnergy}
-        setResource={setEnergy}
-        resourceMultiplier={1}
-        coolDown={autoEnergyCooldown}
-        boost={1}
+        setResource={(newEnergy) => {
+          setEnergy(newEnergy);
+        }}
+        cooldown={autoEnergyCooldown}
       />
       <UpgradeList
         dust={dust}

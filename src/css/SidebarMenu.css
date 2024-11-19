@@ -9,18 +9,30 @@
   padding: 20px;
 }
 
-.sidebar-menu button {
-  background: none;
-  color: #b0bec5;
-  text-align: left;
-  border: none;
-  padding: 15px;
+.menu-item {
+  padding: 15px 20px;
   font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  color: #fff;
+  background-color: #3944bc;
   cursor: pointer;
-  transition: color 0.2s, background-color 0.2s;
+  transition: all 0.3s;
 }
 
-.sidebar-menu button:hover {
-  color: #ffffff;
-  background-color: #3944bc;
+.menu-item.unlocked:hover {
+  background-color: #4e5cf7;
+}
+
+.menu-item.current {
+  background-color: #00bfff;
+  color: #000;
+  font-weight: bold;
+}
+
+.menu-item.locked {
+  background-color: #444;
+  color: #888;
+  cursor: not-allowed;
 }
