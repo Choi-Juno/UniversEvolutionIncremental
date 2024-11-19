@@ -11,23 +11,28 @@ const ResourceRate = ({
   const accumulatedGainRef = useRef(0); // 누적된 획득량
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
+    const calculateResourceGain = () => {
       const currentTime = Date.now();
       const elapsedTime = currentTime - lastUpdateTimeRef.current;
 
-      // 초당 획득량 계산
-      const gainPerSecond = (rate / cooldown) * 1000 * multiplier * boost;
-
-      // 획득량 누적
-      accumulatedGainRef.current += gainPerSecond;
-
       if (elapsedTime >= 1000) {
+        // 초당 획득량 계산
+        const gainPerSecond = (rate / cooldown) * 1000 * multiplier * boost;
+
+        // 누적 획득량 계산 및 적용
+        accumulatedGainRef.current += gainPerSecond * (elapsedTime / 1000);
         const totalGain = Math.floor(accumulatedGainRef.current);
-        setResource((prev) => prev + totalGain); // 상태 업데이트
-        accumulatedGainRef.current -= totalGain;
+
+        if (totalGain > 0) {
+          setResource((prev) => prev + totalGain); // 상태 업데이트
+          accumulatedGainRef.current -= totalGain; // 누적값 정리
+        }
+
         lastUpdateTimeRef.current = currentTime;
       }
-    }, 1000); // 0.1초마다 체크
+    };
+
+    const intervalId = setInterval(calculateResourceGain, 100); // 짧은 간격으로 확인
 
     return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
   }, [rate, cooldown, multiplier, boost, setResource]);

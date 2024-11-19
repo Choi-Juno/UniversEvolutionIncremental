@@ -67,7 +67,6 @@ const UpgradeList = ({
       // 비용 차감 및 상태 업데이트를 함수형으로 처리
       setDust((prevDust) => prevDust - upgrade.cost);
 
-      const newLevel = upgrade.currentLevel + 1;
       const newCost = Math.floor(upgrade.cost * upgrade.costMultiplier);
 
       setUpgrades((prevUpgrades) =>
@@ -76,7 +75,7 @@ const UpgradeList = ({
             ? {
                 ...u,
                 cost: newCost, // 비용 증가
-                currentLevel: newLevel, // 레벨 증가
+                currentLevel: u.currentLevel + 1, // 레벨 증가
               }
             : u
         )
@@ -94,7 +93,7 @@ const UpgradeList = ({
           setAutoEnergy,
           setAutoEnergyCooldown,
         },
-        newLevel
+        upgrade.currentLevel + 1
       );
     } else {
       alert("Not enough dust for this upgrade!");
