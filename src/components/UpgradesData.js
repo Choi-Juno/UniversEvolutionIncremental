@@ -3,7 +3,7 @@ const upgradesData = [
     id: 1,
     name: "Large hands", // 큰 손
     baseCost: 10,
-    costMultiplier: 1.2,
+    costMultiplier: 1.15,
     currentLevel: 0,
     unlockRequirement: { dust: 10 },
     isUnlocked: false, // 초기 상태는 해금되지 않음
@@ -14,7 +14,7 @@ const upgradesData = [
     id: 2,
     name: "Dust Collector", // 먼지 흡입기
     baseCost: 50,
-    costMultiplier: 1.17,
+    costMultiplier: 1.2,
     currentLevel: 0,
     unlockRequirement: { upgradeId: 1, level: 5, dust: 50 }, // 1번 업그레이드가 5레벨 이상일 때 해금
     isUnlocked: false,
@@ -25,7 +25,7 @@ const upgradesData = [
     id: 3,
     name: "Two-handed", // 양손 수집가
     baseCost: 200,
-    costMultiplier: 2,
+    costMultiplier: 1.5,
     currentLevel: 0,
     unlockRequirement: { upgradeId: 1, level: 10, dust: 500 },
     isUnlocked: false,
@@ -37,7 +37,7 @@ const upgradesData = [
     name: "Double Auto Collection",
     baseCost: 1000,
     currentLevel: 0,
-    costMultiplier: 1.89,
+    costMultiplier: 1.6,
     unlockRequirement: { upgradeId: 2, level: 10, dust: 500 },
     isUnlocked: false,
     description: "Doubles automatic dust collection",
@@ -59,9 +59,9 @@ const upgradesData = [
   {
     id: 6,
     name: "Auto Energy Generator",
-    baseCost: 5000000,
+    baseCost: 3000000,
     currentLevel: 0,
-    costMultiplier: 1.33,
+    costMultiplier: 1.8,
     unlockRequirement: { upgradeId: 5, level: 3, dust: 1000000 },
     isUnlocked: false,
     description: "Automatically generate energy",
@@ -70,9 +70,9 @@ const upgradesData = [
   {
     id: 7,
     name: "Auto Energy Cooldown",
-    baseCost: 10000000,
+    baseCost: 5000000,
     currentLevel: 0,
-    costMultiplier: 10,
+    costMultiplier: 5,
     unlockRequirement: { upgradeId: 6, level: 1 },
     isUnlocked: false,
     description: "Reduces Auto Energy cooldown by 10%",
